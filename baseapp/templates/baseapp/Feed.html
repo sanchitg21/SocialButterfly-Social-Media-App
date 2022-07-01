@@ -1,0 +1,372 @@
+{% load static %}
+{% load extratags %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{% static 'css/feed--styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <title>Feed</title>
+    <style>
+        .input-field {
+            width: 95%;
+        }
+
+        .input-field label {
+            color: #90a4ae;
+        }
+
+        .input-field input[type=text]:focus+label {
+            color: #90a4ae;
+        }
+
+        .input-field input:focus+label {
+            color: #546e7a !important;
+        }
+
+        /* label underline focus color */
+        .row .input-field input:focus {
+            border-bottom: 1px solid #607d8b !important;
+            box-shadow: 0 1px 0 0 #263238 !important
+        }
+
+        .input-field .prefix.active {
+            color: #263238;
+        }
+
+        .input-field input[type=text].valid {
+            border-bottom: 1px solid #263238;
+            box-shadow: 0 1px 0 0 #263238;
+        }
+
+        .input-field input[type=text].invalid {
+            border-bottom: 1px solid #263238;
+            box-shadow: 0 1px 0 0 #263238;
+        }
+
+        input:not([type]),
+        input[type=text]:not(.browser-default),
+        input[type=password]:not(.browser-default),
+        input[type=email]:not(.browser-default),
+        input[type=url]:not(.browser-default),
+        input[type=time]:not(.browser-default),
+        input[type=date]:not(.browser-default),
+        input[type=datetime]:not(.browser-default),
+        input[type=datetime-local]:not(.browser-default),
+        input[type=tel]:not(.browser-default),
+        input[type=number]:not(.browser-default),
+        input[type=search]:not(.browser-default),
+        textarea.materialize-textarea {
+            border-bottom: 1px solid #90a4ae;
+        }
+
+
+        .input-field textarea:focus+label {
+            color: #90a4ae;
+        }
+
+        .input-field textarea:focus+label {
+            color: #546e7a !important;
+        }
+
+        /* label underline focus color */
+        .row .input-field textarea:focus {
+            border-bottom: 1px solid #607d8b  !important;
+            box-shadow: 0 1px 0 0 #263238 !important
+        }
+
+        .input-field .prefix.active {
+            color: #263238;
+        }
+
+        .input-field textarea.valid {
+            border-bottom: 1px solid #90a4ae;
+            box-shadow: 0 1px 0 0 #263238;
+        }
+
+        .input-field textarea.invalid {
+            border-bottom: 1px solid #607d8b ;
+            box-shadow: 0 1px 0 0 #263238;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <p class="navbar--appname"><a href="{% url 'feed' %}" style="color: inherit">SocialButterfly</a></p>
+        <div class="navbar--icons">
+            <a href="#createPostModal" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Create a Post"><i class="material-icons">create</i></a>
+            <a href="{% url 'allPages' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Find Pages"><i class="material-icons">pages</i></a>
+            <a href="{% url 'friends' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Explore"><i class="material-icons">people</i></a>
+            <a href="{% url 'profile' request.user.username %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="My Profile"><i class="material-icons">person</i></a>
+            <a href="{% url 'logout' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Logout"><i class="material-icons">logout</i></a>
+        </div>
+
+    </div>
+
+    <div class="main--page">
+        <div class="left--panel">
+            <p style="font-size: 26px;" class="left--text">Pending Friend Requests</p>
+            {% for requester in friendRequests %}
+            <div class="pending--friends post--card" style="width: 369px;">
+                <img src="{% static 'images/testimg.jpg' %}" class="profilePic" alt="">
+                &nbsp;&nbsp;
+                <p class="left--accountName">{{ requester.username }}</p>
+                <div style="text-align: right;width: 193px;" id="{{ requester.username }}buttons">
+                    <button class="friendRequest friendaccept waves-effect btn" style="font-family: 'Nunito', sans-serif; font-size: small; margin-right: 2px;" id="accept{{ requester.username }}">Accept</button>
+                    <button class="friendRequest friendreject waves-effect btn" style="font-family: 'Nunito', sans-serif; font-size: small; margin-left: 2px;" id="reject{{ requester.username }}">Reject</button>
+                    <!-- <button class="friendRequest disabled waves-effect btn" style="font-family: 'Nunito', sans-serif; font-size: small; margin-left: 2px; background-color: #2f5d3e !important;" id="reject{{ requester.username }}">Request Accepted</button> -->
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        <div class="middle--panel">
+
+
+            <div class="post--card center-align">
+                <div class="card--title">Create A New Post</div>
+                    Let everyone know what you're upto
+                <br><br>
+                <a href="#createPostModal" class="waves-effect waves-light btn modal-trigger likebuttonUnliked"><i class="material-icons left">create</i>CREATE POST</a>
+                <br><br>
+            </div>
+
+            <div id="createPostModal" class="modal blue-grey darken-3">
+                <div style="padding-bottom: 5px; margin-top: 5px;" class="modal-content blue-grey-text text-lighten-4">
+                  <h4>Create New Post</h4>
+                  <form action="" method="POST" style="margin-bottom: 0;" enctype="multipart/form-data">
+                      {% csrf_token %}
+                    <div style="margin-top: 1px; margin-bottom: 1px;" class="row">
+                        <div class="col s12">
+                          Title of your Post:
+                          <div style="width: 60% !important;" class="input-field inline">
+                            <input required name="Title" id="postTtile" type="text">
+                            <label for="postTtile">Title</label>
+                          </div>
+                        </div>
+                      </div>
+                    <div style="margin-top: 1px; margin-bottom: 1px;" class="row">
+                        <div class="col s12">
+                            Body of your Post:
+                          <div style="width: 60% !important;" class="input-field inline">
+                            <textarea name="Body" id="postBody" type="text" class="materialize-textarea"></textarea>
+                            <label for="postBody">Body</label>
+                        </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col s12">
+                            Which page do you want to post this to
+                            <select name="Page">
+                            <option value="profile" selected>Post this on my profile</option>
+                            {% for page in pagesFollowed %}
+                                <option value="{{ page.PageID }}">{{ page.PageName }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: inline-flex; align-items: center;" class="input-field inline">
+                        <p style="font-size: large;" class="left" for="id_ProfilePic">Image: &nbsp;</p>
+                        <input style="margin-top: 1rem;" type="file" name="PostImage" accept="image/*" id="id_ProfilePic">
+                    </div>
+                </div>
+                <div style="text-align: center !important;" class="modal-footer blue-grey darken-3">
+                    <button type="submit" class="modalbuttonunliked waves-effect waves-green btn">CREATE POST</button>
+                </div>
+            </form>
+              </div>
+
+            {% for post in posts %}
+            <div class="post--card">
+                <div class="card--navbar">
+                    <img class="profilePic" src="{{ post.0.user|profilepicfromuser }}" alt="">
+                    &nbsp;
+                    <div class="name--time--page">
+                        <div class="name--page">
+                            <p class="profile--name"><a class="friendname" href="{% url 'profile' post.0.user.username %}"> {{ post.0.user.username }}</a></p>
+                            {% if post.0.page != None %}
+                                <i class="material-icons profile--name">play_arrow</i>
+                                <p class="profile--name" style="width: 300px;"><a class="friendname" href="{% url 'pages' post.0.page.PageID %}">{{post.0.page.PageName}}</a></p>
+                            {% endif %}
+                        </div>
+                        <div class="time">
+                            <p class="post--time">{{ post.0.PostedOn }}</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card--title">{{ post.0.Title }}</div>
+                <div class="card--content">
+                    {{ post.0.Body }}
+                    {% if post.0.Image != None and post.0.Image != "" %}
+                    <br><br>
+                        <img src="{{ post.0.Image.url }}" alt="" style="max-width: 100%;">
+                    {% endif %}
+                </div>
+
+                <div class="like--comment">
+                    {% if post.1 %}
+                    <a id="unlikePost{{ post.0.PostID }}" class="likebuttonLiked waves-effect waves-light btn likepost">
+                        <i class="material-icons left">thumb_up_off_alt</i>LIKED
+                    </a>
+                    {% else %}
+                    <a id="likePost{{ post.0.PostID }}" class="likebuttonUnliked waves-effect waves-light btn likepost">
+                        <i class="material-icons left">thumb_up_off_alt</i>LIKE
+                    </a>
+                    {% endif %}
+                    &nbsp;  
+                    <a id="likenumber{{ post.0.PostID }}" href="{% url 'post' post.0.PostID %}" class="likenumber">{{ post.0.LikeCount }}</a>
+                    
+                    <a href="{% url 'post' post.0.PostID %}" class="likebuttonUnliked waves-effect waves-light btn" style="width: 157px;display: inline-flex;align-items: center;">
+                        <i class="material-icons">chat_bubble_outline</i> &nbsp;
+                        Comment
+                        <p class="comment">{{ post.0.CommentCount }}</p>
+                    </a>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        <div class="right--panel">
+            <p style="font-size: 26px;" class="right--text">Pages you follow</p>
+            {% for page in pagesFollowed %}
+            <div class="pages--followed">
+                <i class="material-icons">auto_stories</i><a href="{% url 'pages' page.PageID %}">{{ page.PageName }}</a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
+<script>
+    $(document).on('click', '.friendRequest', function(event){
+    event.preventDefault();
+    var elem = event.currentTarget;
+    var id = event.target.id;
+    var type = id.slice(0,6);
+    var userid = id.slice(6);
+    if(type === 'accept'){
+          $.ajax({
+              type:'GET',
+              url:'',
+              data:{
+                  tag:'friendrequest',
+                  type:'accept',
+                  userid:userid,
+              },  
+              success:function(){
+                  var accepted = document.createElement('button');
+                  accepted.className = "friendRequest disabled waves-effect btn";
+                  accepted.setAttribute('style',"font-family: 'Nunito', sans-serif; font-size: small; margin-left: 2px; background-color: #2f5d3e !important;");
+                  accepted.innerHTML = "Request Accepted";
+                  document.getElementById(userid+"buttons").appendChild(accepted);
+                  document.getElementById("accept"+userid).remove();
+                  document.getElementById("reject"+userid).remove();
+              }
+          });
+      }
+    else{
+        $.ajax({
+              type:'GET',
+              url:'',
+              data:{
+                  tag:'friendrequest',
+                  type:'reject',
+                  userid:userid,
+              },  
+              success:function(){
+                var rejected = document.createElement('button');
+                  rejected.className = "friendRequest disabled waves-effect btn";
+                  rejected.setAttribute('style',"font-family: 'Nunito', sans-serif; font-size: small; margin-left: 2px; background-color: #5d2f33 !important;");
+                  rejected.innerHTML = "Request Rejected";
+                  document.getElementById(userid+"buttons").appendChild(rejected);
+                  document.getElementById("accept"+userid).remove();
+                  document.getElementById("reject"+userid).remove();
+              
+              }
+          });
+    }
+    
+    });
+</script>
+<script>
+    $(document).on('click', '.likepost', function(event){
+    event.preventDefault();
+    var elem = event.currentTarget;
+    var classes = elem.classList;
+    
+    if(classes.contains('likebuttonUnliked')){
+        var id = parseInt(elem.id.slice(8,));
+        $.ajax({
+            type:'GET',
+            url:'',
+            data:{
+                tag:'likepost',
+                id:id,
+                
+            },  
+            success:function(){
+                elem.childNodes[2].nodeValue = "LIKED";
+                elem.className = "likebuttonLiked waves-effect waves-light btn likepost";
+                elem.id = "unlikePost" + String(id);    
+                var lk = document.getElementById("likenumber" + String(id));
+                lk.innerHTML = String(parseInt(lk.innerHTML) + 1);
+            }
+        });
+    }
+    else{
+        var id = parseInt(elem.id.slice(10,));
+        $.ajax({
+            type:'GET',
+            url:'',
+            data:{
+                tag:'unlikepost',
+                id:id,
+            },  
+            success:function(){
+            elem.childNodes[2].nodeValue = "LIKE";
+            elem.className = "likebuttonUnliked waves-effect waves-light btn likepost";
+            elem.id = "likePost" + String(id);    
+            var lk = document.getElementById("likenumber" + String(id));
+            lk.innerHTML = String(parseInt(lk.innerHTML) - 1);
+            }
+        });
+    }
+    
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+  });
+</script>
+<!-- <script>
+    {% for message in messages %}
+        alert("{{message}}");
+    {% endfor %}
+</script> -->
+</html>

@@ -1,0 +1,125 @@
+{% load static %}
+{% load extratags %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{% static 'css/signup--styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <title>Post</title>
+    <style>
+    .input-field{
+        width: 95%;
+    }
+    .input-field label {
+        color: #263238;
+    }
+    .input-field input[type=text]:focus + label {
+        color: #263238;
+    }
+    .input-field input:focus + label {
+    color: #263238 !important;
+    }
+    /* label underline focus color */
+    .row .input-field input:focus {
+        border-bottom: 1px solid #263238 !important;
+        box-shadow: 0 1px 0 0 #263238 !important
+    }
+    .input-field .prefix.active {
+        color: #263238;
+        }
+    .input-field input[type=text].valid {
+        border-bottom: 1px solid #263238;
+        box-shadow: 0 1px 0 0 #263238;
+    }
+    .input-field input[type=text].invalid {
+        border-bottom: 1px solid #263238;
+        box-shadow: 0 1px 0 0 #263238;
+    }
+    input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea {
+    border-bottom: 1px solid #3e4a50;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <p class="navbar--appname"><a href="{% url 'home' %}" style="color: inherit;">SocialButterfly</a></p>
+        <!-- <div class="navbar--icons">
+            <a class="link" href=""><i class="material-icons">create</i></a>
+            <a class="link" href=""><i class="material-icons">pages</i></a>
+            <a class="link" href="/friends"><i class="material-icons">people</i></a>
+            <a class="link" href=""><i class="material-icons">person</i></a>
+        </div> -->
+
+    </div>
+    <br>
+    <div class="row center-align" style="margin-top: 80px;">
+        <div class="col s12 m4 offset-m4">
+          <div class="card" style="background-color: #90a4ae; border: 1px solid white; border-radius: 5px;">
+            <div class="card-content white-text" style="padding-left: 1%;">
+              <span style="color: #263238;" class="card-title">Signup</span>
+              <br><br>
+              <form action="" method="POST" id="SignupForm" autocomplete="off">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="row" style="display: flex; align-items: center; margin-left: 0%;">
+                <div class="col s1" style="display: flex; align-items: center;">
+                    {% if field.name == 'username' %}<i class = 'material-icons' style="color: #263238;">account_circle</i>
+                    {% elif field.name == 'email' %}<i class = 'material-icons' style="color: #263238;">email</i>
+                    {% else %}<i class = 'material-icons' style="color: #263238;">key</i>{% endif %}
+                </div>
+                        <div style="margin-top: 0%;" class="col s10">
+                        <div style="width: 100%;margin-top: 0%;" class="input-field inline">
+                            {{ field }} 
+                            {{ field.label_tag }}
+                            {% for error in field.errors %}
+                            <p style="color: rgb(167, 1, 1);">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        </div>
+                        {% if field.help_text %}
+                        <div class="col s1">
+                            <span class="tooltipped" data-position="right" data-tooltip="{{ field.help_text }}">
+                                <i class='material-icons' style="color: #263238;">info</i>
+                            </span>
+                        </div>
+                        {% endif %}
+                        
+                    </div>
+                        {% endfor %}
+                    <a id="loginbutton" style="color: #263238;" href="{% url 'login' %}">Already Have an Account? Login</a><br><br>
+                    <div class="row center-align">
+                        <a onclick="submitMethod()" style="padding-bottom: 35px !important;" class="likebuttonUnliked waves-effect waves-light btn likecomment" type="submit" >CREATE ACCOUNT</a>
+                    </div>
+                    <br>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+  });
+  function submitMethod() {
+        document.getElementById("SignupForm").submit();
+    }
+</script>
+</html>
+

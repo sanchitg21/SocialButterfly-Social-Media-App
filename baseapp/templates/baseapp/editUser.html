@@ -1,0 +1,187 @@
+{% load static %}
+{% load extratags %}
+    
+<html lang="en">
+     
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="{% static 'css/editUser--styles.css' %}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+                
+        <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+        <title>Account Setup</title>
+        <style>
+            .input-field {
+                width: 95%;
+            }
+    
+            .input-field label {
+                color: #263238;
+                font-weight: 500;
+            }
+    
+            .input-field input[type=text]:focus+label {
+                color: #263238;
+            }
+    
+            .input-field input:focus+label {
+                color: #263238 !important;
+            }
+    
+            /* label underline focus color */
+            .row .input-field input:focus {
+                border-bottom: 1px solid #263238 !important;
+                box-shadow: 0 1px 0 0 #263238 !important
+            }
+    
+            .input-field .prefix.active {
+                color: #263238;
+            }
+    
+            .input-field input[type=text].valid {
+                border-bottom: 1px solid #263238;
+                box-shadow: 0 1px 0 0 #263238;
+            }
+    
+            .input-field input[type=text].invalid {
+                border-bottom: 1px solid #263238;
+                box-shadow: 0 1px 0 0 #263238;
+            }
+    
+            input:not([type]),
+            input[type=text]:not(.browser-default),
+            input[type=password]:not(.browser-default),
+            input[type=email]:not(.browser-default),
+            input[type=url]:not(.browser-default),
+            input[type=time]:not(.browser-default),
+            input[type=date]:not(.browser-default),
+            input[type=datetime]:not(.browser-default),
+            input[type=datetime-local]:not(.browser-default),
+            input[type=tel]:not(.browser-default),
+            input[type=number]:not(.browser-default),
+            input[type=search]:not(.browser-default),
+            textarea.materialize-textarea {
+                border-bottom: 1px solid #3e4a50;
+            }
+            
+            .datepicker-calendar-container{
+                background-color: #eceff1 ;
+            }
+        </style>
+    </head>
+<body>
+    <div class="navbar">
+        <p class="navbar--appname"><a href="{% url 'feed' %}" style="color: inherit; opacity: 100% !important;">SocialButterfly</a></p>
+        <div class="navbar--icons">
+            <a href="{% url 'allPages' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Create a Post"><i class="material-icons">pages</i></a>
+            <a href="{% url 'friends' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Explore"><i class="material-icons">people</i></a>
+            <a href="{% url 'profile' request.user.username %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="My Profile"><i class="material-icons">person</i></a>
+            <a href="{% url 'logout' %}" class="modal-trigger tooltipped" data-position="bottom" data-tooltip="Logout"><i class="material-icons">logout</i></a>
+        </div>
+    </div>
+    <br>
+    <div class="row center-align" style="margin-top: 100px;">
+        <div class="col s12 m4 offset-m4">
+          <div class="card" style="background-color: #90a4ae; border-radius: 5px;">
+            <div class="card-content blue-grey-text text-darken-4" style="padding-left: 1%;">
+              <span class="card-title" style="font-size: 32px;">Edit Account Details</span>
+              <br><br>
+              <form id="mainform" enctype="multipart/form-data" action="" method="post" autocomplete="off">
+                  {% csrf_token %}
+                <div style="width: 90%;" class="input-field inline">
+                    <input required type="text" name="Name" maxlength="150" id="id_Name" value="{{userdetail.Name}}">
+                    <label for="id_Name">Update Name:</label>
+                </div>
+                <div style="width: 90%;" class="input-field inline">
+                    <input required type="text" name="PhoneNumber" maxlength="10" required id="id_PhoneNumber" value="{{userdetail.PhoneNumber}}">
+                    <label for="id_PhoneNumber">Update PhoneNumber:</label>
+                </div>
+                <div style="width: 90%;" class="input-field inline">
+                    <input required type="text" name="About" maxlength="300" id="id_About" value="{{userdetail.About}}">
+                    <label for="id_About">Update About:</label>
+                </div>
+                <div style="width: 90%;" class="input-field inline">
+                    <label>
+                        {% if userdetail.Private %}
+                        <input required type="checkbox" name="Private" id="id_Private" checked="checked" class="filled-in checkbox-blue-grey-darken-4"/>
+                        {% else %}
+                        <input required type="checkbox" name="Private" id="id_Private" class="filled-in checkbox-blue-grey-darken-4"/>
+                        {% endif %}
+                        <span style=" font-size: 15px; font-weight: 500; color: #263238;">Set Account to Private</span>
+                    </label>
+                </div>
+                <br><br><br>
+                <div style="width: 90%;" class="input-field inline">
+                    <p style="font-size: large;" class="left" for="id_ProfilePic">Change ProfilePic: </p>
+                    <input type="file" name="ProfilePic" accept="image/*" id="id_ProfilePic">
+                </div>
+                <div class="row center-align">
+                    <a onclick="submitMethod()" style="padding-bottom: 35px !important;" class="likebuttonUnliked waves-effect waves-light btn likecomment" type="submit" >SUBMIT</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.datepicker');
+    options = {
+        format:'yyyy-mm-dd',
+        autoClose:true,
+    }
+    var instances = M.Datepicker.init(elems,options);
+ 
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+  function submitMethod() {
+        var form = document.getElementById("mainform");
+        var elements = document.getElementsByTagName("input")
+        var inputs = Array();
+        var ar = ['id_Name', 'id_DateOfBirth', 'id_PhoneNumber', 'id_About', 'id_Private',]
+        for(var element of elements){
+            if(ar.includes(element.id)){
+                if(element.id == 'id_About'){
+                    inputs.push(element);
+ 
+                }
+                else{
+                    inputs.push(element);
+                }
+            }
+        }
+        console.log(inputs);
+        for(var input of inputs){
+            if(input.name == "Private" || input.type == "button"){
+            }
+            else{
+                if(input.value == ""){
+                    alert(input.name + " must be filled out");
+                    return false;
+                }
+            }
+        };
+        form.submit();
+        return true;
+    }   
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.tooltipped');
+    var instances = M.Tooltip.init(elems);
+  });
+</script>
+</html>
